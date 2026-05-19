@@ -1,0 +1,24 @@
+<h2>Pomodoro</h2>
+
+<div class="timer-display" id="timer-container"
+     data-remaining="{{ state.remaining_seconds }}"
+     data-running="{{ state.running | lower }}"
+     data-phase="{{ state.phase }}">
+    <div class="phase-label">
+        {% if state.phase == "work" %}Focus{% elif state.phase == "short_break" %}Short Break{% else %}Long Break{% endif %}
+    </div>
+    <div class="timer-countdown" id="countdown">
+        {{ "%02d"|format(state.remaining_seconds // 60) }}:{{ "%02d"|format(state.remaining_seconds % 60) }}
+    </div>
+    <div class="session-count">Sessions: {{ state.sessions_completed }}</div>
+</div>
+
+<div class="timer-controls">
+    {% if not state.running %}
+    <button hx-post="/pomodoro/start" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Start</button>
+    {% else %}
+    <button hx-post="/pomodoro/pause" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Pause</button>
+    {% endif %}
+    <button hx-post="/pomodoro/reset" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Reset</button>
+    <button hx-post="/pomodoro/skip" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Skip</button>
+</div>
