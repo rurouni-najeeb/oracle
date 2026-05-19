@@ -1,0 +1,21 @@
+<h2>Slack</h2>
+
+{% if error %}
+<p class="error-state">{{ error }}</p>
+<button hx-get="/slack/panel" hx-target="#slack-panel > div" hx-swap="innerHTML">Retry</button>
+{% elif messages %}
+<ul class="message-list">
+    {% for msg in messages %}
+    <li class="slack-message">
+        <div class="msg-header">
+            <span class="msg-channel">#{{ msg.channel }}</span>
+            <span class="msg-author">{{ msg.author }}</span>
+            <span class="msg-time">{{ msg.timestamp }}</span>
+        </div>
+        <div class="msg-text">{{ msg.text }}</div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No messages. Check your channel configuration.</p>
+{% endif %}
