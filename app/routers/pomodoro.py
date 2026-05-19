@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Request
+from typing import Optional
+from fastapi import APIRouter, Form, Request
 from fastapi.responses import JSONResponse
 from fastapi.templating import Jinja2Templates
 from app.services.timer import PomodoroTimer
@@ -35,15 +36,19 @@ async def state(request: Request):
 
 
 @router.post("/start")
-async def start(request: Request):
+async def start(request: Request, remaining: Optional[str] = Form(None)):
     timer = _get_timer(request)
+    if remaining is not None:
+        timer.remaining_seconds = int(remaining)
     timer.start()
     return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
 
 
 @router.post("/pause")
-async def pause(request: Request):
+async def pause(request: Request, remaining: Optional[str] = Form(None)):
     timer = _get_timer(request)
+    if remaining is not None:
+        timer.remaining_seconds = int(remaining)
     timer.pause()
     return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
 

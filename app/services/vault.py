@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-TASK_PATTERN = re.compile(r"^- \[([ x])\] (.+?)(?:\s+#task)\s*$")
+CHECKBOX_PATTERN = re.compile(r"^- \[([ x])\] (.+)$")
 
 
 @dataclass
@@ -13,16 +13,31 @@ class Task:
     line: int
 
 
+def _extract_task_text(raw: str) -> str | None:
+    """Return task text if line contains #task anywhere, else None."""
+    if "#task" not in raw:
+        return None
+    text = re.sub(r"#task\b", "", raw).strip()
+    # Remove trailing metadata like ✅ 2026-04-20
+    text = re.sub(r"\s*✅\s*\d{4}-\d{2}-\d{2}\s*$", "", text)
+    return text
+
+
 def scan_tasks(vault_path: Path) -> list[Task]:
     tasks = []
     for md_file in sorted(vault_path.rglob("*.md")):
-        lines = md_file.read_text().splitlines()
+        try:
+            lines = md_file.read_text().splitlines()
+        except (UnicodeDecodeError, OSError):
+            continue
         for i, line in enumerate(lines, start=1):
-            match = TASK_PATTERN.match(line)
+            match = CHECKBOX_PATTERN.match(line)
             if match:
                 completed = match.group(1) == "x"
-                text = match.group(2).strip()
-                tasks.append(Task(text=text, completed=completed, file=md_file, line=i))
+                raw_text = match.group(2)
+                text = _extract_task_text(raw_text)
+                if text is not None:
+                    tasks.append(Task(text=text, completed=completed, file=md_file, line=i))
     return tasks
 
 
