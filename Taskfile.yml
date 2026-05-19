@@ -1,0 +1,47 @@
+version: "3"
+
+vars:
+  PORT: "8000"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  install:
+    desc: Install all dependencies
+    cmds:
+      - uv sync
+
+  dev:
+    desc: Start the development server with auto-reload
+    cmds:
+      - uv run uvicorn app.main:app --reload --port {{.PORT}}
+
+  test:
+    desc: Run all tests
+    cmds:
+      - uv run pytest -v
+
+  test:watch:
+    desc: Run tests in watch mode
+    cmds:
+      - uv run pytest --watch -v
+    ignore_error: true
+
+  lint:
+    desc: Run ruff linter
+    cmds:
+      - uv run ruff check .
+
+  format:
+    desc: Format code with ruff
+    cmds:
+      - uv run ruff format .
+
+  check:
+    desc: Run linter and tests
+    deps:
+      - lint
+      - test
