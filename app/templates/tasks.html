@@ -1,0 +1,26 @@
+<h2>Tasks</h2>
+
+<form hx-post="/tasks/add" hx-target="#tasks-panel > div" hx-swap="innerHTML" class="add-task-form">
+    <input type="text" name="text" placeholder="Add a task..." required>
+    <button type="submit">+</button>
+</form>
+
+{% if tasks %}
+<ul class="task-list">
+    {% for task in tasks %}
+    <li class="task-item {% if task.completed %}completed{% endif %}">
+        <form hx-post="/tasks/toggle" hx-target="#tasks-panel > div" hx-swap="innerHTML">
+            <input type="hidden" name="file" value="{{ task.file }}">
+            <input type="hidden" name="line" value="{{ task.line }}">
+            <button type="submit" class="checkbox">
+                {% if task.completed %}[x]{% else %}[ ]{% endif %}
+            </button>
+        </form>
+        <span class="task-text">{{ task.text }}</span>
+        <span class="task-source">{{ task.file.stem }}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No tasks found.</p>
+{% endif %}
