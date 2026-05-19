@@ -60,3 +60,20 @@ def test_add_task_creates_file_if_missing(tmp_path):
     assert note.exists()
     content = note.read_text()
     assert "- [ ] First task #task" in content
+
+
+def test_scan_finds_task_tag_at_start(tmp_path):
+    note = tmp_path / "note.md"
+    note.write_text("- [ ] #task Do something important\n")
+    tasks = scan_tasks(tmp_path)
+    assert len(tasks) == 1
+    assert tasks[0].text == "Do something important"
+
+
+def test_scan_handles_completed_with_date(tmp_path):
+    note = tmp_path / "note.md"
+    note.write_text("- [x] #task Set up a sync with team ✅ 2026-03-31\n")
+    tasks = scan_tasks(tmp_path)
+    assert len(tasks) == 1
+    assert tasks[0].completed is True
+    assert tasks[0].text == "Set up a sync with team"

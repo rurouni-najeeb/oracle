@@ -3,7 +3,7 @@ slack:
     - general
 
 tasks:
-  vault_path: ""
+  vault_path: "/Users/najeeb.khan/Documents/Obsidian Vault"
   inbox_file: daily
 
 pomodoro:

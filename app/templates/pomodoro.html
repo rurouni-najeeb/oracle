@@ -15,9 +15,11 @@
 
 <div class="timer-controls">
     {% if not state.running %}
-    <button hx-post="/pomodoro/start" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Start</button>
+    <button hx-post="/pomodoro/start" hx-target="#pomodoro-panel > div" hx-swap="innerHTML"
+            hx-vals="js:{remaining: document.getElementById('timer-container').dataset.remaining}">Start</button>
     {% else %}
-    <button hx-post="/pomodoro/pause" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Pause</button>
+    <button hx-post="/pomodoro/pause" hx-target="#pomodoro-panel > div" hx-swap="innerHTML"
+            hx-vals="js:{remaining: document.getElementById('timer-container').dataset.remaining}">Pause</button>
     {% endif %}
     <button hx-post="/pomodoro/reset" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Reset</button>
     <button hx-post="/pomodoro/skip" hx-target="#pomodoro-panel > div" hx-swap="innerHTML">Skip</button>
