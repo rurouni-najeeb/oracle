@@ -1,0 +1,21 @@
+<h2>RSS Feeds</h2>
+
+{% if items %}
+<ul class="feed-list">
+    {% for item in items %}
+    <li class="feed-item {% if item.is_read %}read{% endif %}">
+        <a href="{{ item.link }}" target="_blank" class="feed-title">{{ item.title }}</a>
+        <div class="feed-meta">
+            <span class="feed-source">{{ item.source }}</span>
+            <span class="feed-date">{{ item.published }}</span>
+        </div>
+        <p class="feed-summary">{{ item.summary }}</p>
+        {% if not item.is_read %}
+        <button hx-post="/rss/mark-read/{{ item.item_id }}" hx-target="#rss-panel > div" hx-swap="innerHTML" class="mark-read-btn">Mark read</button>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No feeds configured. Add feeds in config.yaml.</p>
+{% endif %}
