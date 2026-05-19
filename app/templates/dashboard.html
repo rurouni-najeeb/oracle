@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel" id="slack-panel">
+    <div hx-get="/slack/panel" hx-trigger="load, every 30s" hx-swap="innerHTML">
+        <p>Loading Slack messages...</p>
+    </div>
+</section>
+
+<section class="panel" id="tasks-panel">
+    <div hx-get="/tasks/panel" hx-trigger="load" hx-swap="innerHTML">
+        <p>Loading tasks...</p>
+    </div>
+</section>
+
+<section class="panel" id="pomodoro-panel">
+    <div hx-get="/pomodoro/panel" hx-trigger="load" hx-swap="innerHTML">
+        <p>Loading timer...</p>
+    </div>
+</section>
+
+<section class="panel" id="rss-panel">
+    <div hx-get="/rss/panel" hx-trigger="load, every 300s" hx-swap="innerHTML">
+        <p>Loading feeds...</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/pomodoro.js"></script>
+{% endblock %}
