@@ -42,3 +42,92 @@ header h1 {
     border-bottom: 1px solid #0f3460;
     padding-bottom: 0.5rem;
 }
+
+/* Task panel */
+.add-task-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+.add-task-form input {
+    flex: 1;
+    padding: 0.4rem;
+    background: #1a1a2e;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    color: #e0e0e0;
+}
+.add-task-form button {
+    padding: 0.4rem 0.8rem;
+    background: #e94560;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+.task-list { list-style: none; }
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #0f3460;
+}
+.task-item.completed .task-text { text-decoration: line-through; opacity: 0.5; }
+.checkbox {
+    background: none;
+    border: 1px solid #e94560;
+    color: #e94560;
+    cursor: pointer;
+    font-family: monospace;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+}
+.task-source { margin-left: auto; font-size: 0.75rem; opacity: 0.5; }
+
+/* Pomodoro */
+.timer-display { text-align: center; padding: 2rem 0; }
+.phase-label { font-size: 0.9rem; text-transform: uppercase; opacity: 0.7; }
+.timer-countdown { font-size: 3rem; font-family: monospace; margin: 0.5rem 0; }
+.session-count { font-size: 0.8rem; opacity: 0.6; }
+.timer-controls { display: flex; justify-content: center; gap: 0.5rem; }
+.timer-controls button {
+    padding: 0.5rem 1rem;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    border-radius: 4px;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+.timer-controls button:hover { background: #e94560; }
+
+/* Slack */
+.message-list { list-style: none; }
+.slack-message { padding: 0.5rem 0; border-bottom: 1px solid #0f3460; }
+.msg-header { display: flex; gap: 0.5rem; font-size: 0.8rem; opacity: 0.7; }
+.msg-channel { color: #e94560; }
+.msg-text { margin-top: 0.25rem; }
+
+/* RSS */
+.feed-list { list-style: none; }
+.feed-item { padding: 0.5rem 0; border-bottom: 1px solid #0f3460; }
+.feed-item.read { opacity: 0.5; }
+.feed-title { color: #4fc3f7; text-decoration: none; }
+.feed-title:hover { text-decoration: underline; }
+.feed-meta { font-size: 0.75rem; opacity: 0.6; margin-top: 0.2rem; }
+.feed-source { color: #e94560; }
+.feed-summary { font-size: 0.85rem; margin-top: 0.3rem; opacity: 0.8; }
+.mark-read-btn {
+    font-size: 0.7rem;
+    background: none;
+    border: 1px solid #0f3460;
+    color: #e0e0e0;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 0.3rem;
+    padding: 0.2rem 0.5rem;
+}
+
+/* Shared */
+.empty-state { opacity: 0.5; font-style: italic; }
+.error-state { color: #e94560; }
