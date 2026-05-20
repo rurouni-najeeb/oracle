@@ -37,7 +37,9 @@ def scan_tasks(vault_path: Path) -> list[Task]:
                 raw_text = match.group(2)
                 text = _extract_task_text(raw_text)
                 if text is not None:
-                    tasks.append(Task(text=text, completed=completed, file=md_file, line=i))
+                    tasks.append(
+                        Task(text=text, completed=completed, file=md_file, line=i)
+                    )
     return tasks
 
 

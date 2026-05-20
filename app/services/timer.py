@@ -12,7 +12,13 @@ class Phase(str, Enum):
 
 
 class PomodoroTimer:
-    def __init__(self, work_minutes: int, short_break: int, long_break: int, long_break_interval: int):
+    def __init__(
+        self,
+        work_minutes: int,
+        short_break: int,
+        long_break: int,
+        long_break_interval: int,
+    ):
         self.work_minutes = work_minutes
         self.short_break = short_break
         self.long_break = long_break
@@ -26,8 +32,11 @@ class PomodoroTimer:
     def _load_state(self) -> None:
         try:
             from app.db import get_db
+
             with get_db() as conn:
-                row = conn.execute("SELECT phase, remaining_seconds, sessions_completed FROM pomodoro_state WHERE id = 1").fetchone()
+                row = conn.execute(
+                    "SELECT phase, remaining_seconds, sessions_completed FROM pomodoro_state WHERE id = 1"
+                ).fetchone()
                 if row:
                     self.phase = Phase(row["phase"])
                     self.remaining_seconds = row["remaining_seconds"]
@@ -38,10 +47,16 @@ class PomodoroTimer:
     def _save_state(self) -> None:
         try:
             from app.db import get_db
+
             with get_db() as conn:
                 conn.execute(
                     "UPDATE pomodoro_state SET phase = ?, remaining_seconds = ?, sessions_completed = ?, running = ? WHERE id = 1",
-                    (self.phase.value, self.remaining_seconds, self.sessions_completed, int(self.running)),
+                    (
+                        self.phase.value,
+                        self.remaining_seconds,
+                        self.sessions_completed,
+                        int(self.running),
+                    ),
                 )
                 conn.commit()
         except sqlite3.Error as e:

@@ -20,12 +20,19 @@ async def tasks_panel(request: Request):
     config = request.app.state.config
     vault_path = config.tasks.vault_path
     if not vault_path or not vault_path.exists():
-        return templates.TemplateResponse(request, "tasks.html", {"tasks": [], "groups": []})
+        return templates.TemplateResponse(
+            request, "tasks.html", {"tasks": [], "groups": []}
+        )
     all_tasks = scan_tasks(vault_path)
     incomplete = [t for t in all_tasks if not t.completed]
     sorted_tasks = sorted(incomplete, key=lambda t: t.file.stem)
-    groups = [(source, list(tasks)) for source, tasks in groupby(sorted_tasks, key=lambda t: t.file.stem)]
-    return templates.TemplateResponse(request, "tasks.html", {"tasks": incomplete, "groups": groups})
+    groups = [
+        (source, list(tasks))
+        for source, tasks in groupby(sorted_tasks, key=lambda t: t.file.stem)
+    ]
+    return templates.TemplateResponse(
+        request, "tasks.html", {"tasks": incomplete, "groups": groups}
+    )
 
 
 @router.post("/toggle")

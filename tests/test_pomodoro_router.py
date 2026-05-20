@@ -9,6 +9,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setattr(db_module, "DB_PATH", tmp_path / "test.db")
     db_module.init_db()
     from app.routers import pomodoro
+
     pomodoro._timer = None
     return TestClient(fastapi_app)
 
