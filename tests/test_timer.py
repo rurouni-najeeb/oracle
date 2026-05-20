@@ -2,6 +2,13 @@ import pytest
 from app.services.timer import PomodoroTimer, Phase
 
 
+@pytest.fixture(autouse=True)
+def isolate_db(tmp_path, monkeypatch):
+    import app.db
+    monkeypatch.setattr(app.db, "DB_PATH", tmp_path / "test.db")
+    app.db.init_db()
+
+
 def test_initial_state():
     timer = PomodoroTimer(work_minutes=25, short_break=5, long_break=15, long_break_interval=4)
     assert timer.phase == Phase.WORK

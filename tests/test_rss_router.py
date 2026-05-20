@@ -28,7 +28,7 @@ def test_rss_panel_empty_state(client):
     with patch.object(app.state.feed_service, "fetch_all", return_value=[]):
         response = client.get("/rss/panel")
     assert response.status_code == 200
-    assert "No feeds configured" in response.text
+    assert "No new articles" in response.text
 
 
 def test_mark_read(client):

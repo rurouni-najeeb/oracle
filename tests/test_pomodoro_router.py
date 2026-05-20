@@ -1,14 +1,16 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
+import app.db as db_module
+from app.main import app as fastapi_app
 
 
 @pytest.fixture
-def client():
-    # Reset the timer singleton before each test
+def client(tmp_path, monkeypatch):
+    monkeypatch.setattr(db_module, "DB_PATH", tmp_path / "test.db")
+    db_module.init_db()
     from app.routers import pomodoro
     pomodoro._timer = None
-    return TestClient(app)
+    return TestClient(fastapi_app)
 
 
 def test_pomodoro_panel_returns_html(client):
