@@ -1,5 +1,31 @@
 <h2>RSS Feeds</h2>
 
+<details class="rss-manage">
+    <summary class="rss-manage-toggle">Manage feeds</summary>
+    <form hx-post="/rss/add-feed" hx-target="#rss-panel > div" hx-swap="innerHTML" class="rss-add-form">
+        <input type="url" name="url" placeholder="Feed URL" required class="rss-url-input">
+        <input type="text" name="name" placeholder="Name (optional)" class="rss-name-input">
+        <button type="submit" class="rss-add-btn">Add</button>
+    </form>
+    {% if feeds %}
+    <ul class="rss-feed-list">
+        {% for feed in feeds %}
+        <li class="rss-feed-entry">
+            <span class="rss-feed-name">{{ feed.name }}</span>
+            <form hx-post="/rss/remove-feed" hx-target="#rss-panel > div" hx-swap="innerHTML" class="rss-remove-form">
+                <input type="hidden" name="url" value="{{ feed.url }}">
+                <button type="submit" class="rss-remove-btn" aria-label="Remove feed">
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</details>
+
 {% if items %}
 <ul class="feed-list">
     {% for item in items %}
@@ -16,6 +42,8 @@
     </li>
     {% endfor %}
 </ul>
+{% elif not feeds %}
+<p class="empty-state">No feeds configured. Use "Manage feeds" above to add one.</p>
 {% else %}
-<p class="empty-state">No feeds configured. Add feeds in config.yaml.</p>
+<p class="empty-state">No new articles.</p>
 {% endif %}
