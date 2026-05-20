@@ -3,17 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oracle Dashboard</title>
+    <title>Oracle</title>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <header>
-        <h1>Oracle</h1>
+        <div class="header-content">
+            <h1>Oracle</h1>
+            <span class="header-tagline">personal command center</span>
+            <span class="header-clock" id="header-clock"></span>
+        </div>
+        <div class="header-accent"></div>
     </header>
     <main class="dashboard-grid">
         {% block content %}{% endblock %}
     </main>
     {% block scripts %}{% endblock %}
+    <script>
+    (function() {
+        function updateClock() {
+            const el = document.getElementById('header-clock');
+            if (!el) return;
+            const now = new Date();
+            const h = now.getHours();
+            const greeting = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+            const time = now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+            const day = now.toLocaleDateString([], {weekday: 'long', month: 'short', day: 'numeric'});
+            el.textContent = day + ' · ' + time + ' · good ' + greeting;
+        }
+        updateClock();
+        setInterval(updateClock, 30000);
+    })();
+    </script>
 </body>
 </html>

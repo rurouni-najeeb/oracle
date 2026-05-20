@@ -1,26 +1,44 @@
 <h2>Tasks</h2>
 
 <form hx-post="/tasks/add" hx-target="#tasks-panel > div" hx-swap="innerHTML" class="add-task-form">
-    <input type="text" name="text" placeholder="Add a task..." required>
-    <button type="submit">+</button>
+    <input type="text" name="text" placeholder="What needs to be done?" required>
+    <button type="submit">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </button>
 </form>
 
-{% if tasks %}
-<ul class="task-list">
-    {% for task in tasks %}
-    <li class="task-item {% if task.completed %}completed{% endif %}">
-        <form hx-post="/tasks/toggle" hx-target="#tasks-panel > div" hx-swap="innerHTML">
-            <input type="hidden" name="file" value="{{ task.file }}">
-            <input type="hidden" name="line" value="{{ task.line }}">
-            <button type="submit" class="checkbox">
-                {% if task.completed %}[x]{% else %}[ ]{% endif %}
-            </button>
-        </form>
-        <span class="task-text">{{ task.text }}</span>
-        <span class="task-source">{{ task.file.stem }}</span>
-    </li>
-    {% endfor %}
-</ul>
+{% if groups %}
+{% for source, tasks in groups %}
+<details class="task-group" open>
+    <summary class="task-group-header">
+        <span class="task-group-name">{{ source }}</span>
+        <span class="task-group-count">{{ tasks | length }}</span>
+    </summary>
+    <ul class="task-list">
+        {% for task in tasks %}
+        <li class="task-item {% if task.completed %}completed{% endif %}">
+            <form hx-post="/tasks/toggle" hx-target="#tasks-panel > div" hx-swap="innerHTML" class="task-toggle-form">
+                <input type="hidden" name="file" value="{{ task.file }}">
+                <input type="hidden" name="line" value="{{ task.line }}">
+                <button type="submit" class="checkbox" aria-label="Toggle task">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <rect x="1" y="1" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                        {% if task.completed %}
+                        <path d="M4 8l3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        {% endif %}
+                    </svg>
+                </button>
+            </form>
+            <div class="task-content">
+                <span class="task-text">{{ task.text | md }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</details>
+{% endfor %}
 {% else %}
 <p class="empty-state">No tasks found.</p>
 {% endif %}
