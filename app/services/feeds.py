@@ -1,7 +1,30 @@
+import html
+import logging
+import re
 import time
 import hashlib
 from dataclasses import dataclass
 import feedparser
+
+logger = logging.getLogger(__name__)
+
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
+_WHITESPACE_RE = re.compile(r"\s+")
+_SAFE_URL_SCHEMES = {"http", "https", ""}
+
+
+def _safe_link(url: str) -> str:
+    scheme = url.split(":", 1)[0].lower() if ":" in url else ""
+    if scheme in _SAFE_URL_SCHEMES:
+        return url
+    return ""
+
+
+def _strip_html(text: str) -> str:
+    text = _HTML_TAG_RE.sub(" ", text)
+    text = html.unescape(text)
+    text = _WHITESPACE_RE.sub(" ", text)
+    return text.strip()
 
 
 @dataclass
@@ -17,7 +40,6 @@ class FeedItem:
 class FeedService:
     def __init__(self, cache_ttl_seconds: int = 300):
         self._cache: dict[str, tuple[float, list[FeedItem]]] = {}
-        self._read_items: set[str] = set()
         self._cache_ttl = cache_ttl_seconds
 
     def fetch_feed(self, url: str, name: str) -> list[FeedItem]:
@@ -31,7 +53,7 @@ class FeedService:
         items = []
         for entry in parsed.entries:
             item_id = hashlib.md5((entry.get("link", "") + entry.get("title", "")).encode()).hexdigest()
-            summary = entry.get("summary", "")
+            summary = _strip_html(entry.get("summary", ""))
             if len(summary) > 150:
                 summary = summary[:150] + "..."
             pub = ""
@@ -39,7 +61,7 @@ class FeedService:
                 pub = time.strftime("%Y-%m-%d %H:%M", entry.published_parsed)
             items.append(FeedItem(
                 title=entry.get("title", "Untitled"),
-                link=entry.get("link", ""),
+                link=_safe_link(entry.get("link", "")),
                 summary=summary,
                 source=name,
                 published=pub,
@@ -54,13 +76,20 @@ class FeedService:
             try:
                 items = self.fetch_feed(feed["url"], feed["name"])
                 all_items.extend(items)
-            except Exception:
+            except (OSError, KeyError, ValueError) as e:
+                logger.warning("Failed to fetch feed %s: %s", feed.get("name", "unknown"), e)
                 continue
         all_items.sort(key=lambda x: x.published, reverse=True)
         return all_items
 
     def mark_read(self, item_id: str) -> None:
-        self._read_items.add(item_id)
+        from app.db import get_db
+        with get_db() as conn:
+            conn.execute("INSERT OR IGNORE INTO read_items (item_id, read_at) VALUES (?, ?)", (item_id, time.time()))
+            conn.commit()
 
     def is_read(self, item_id: str) -> bool:
-        return item_id in self._read_items
+        from app.db import get_db
+        with get_db() as conn:
+            row = conn.execute("SELECT 1 FROM read_items WHERE item_id = ?", (item_id,)).fetchone()
+            return row is not None

@@ -1,17 +1,15 @@
-slack:
-  channels:
-    - general
-
-tasks:
-  vault_path: "/Users/najeeb.khan/Documents/Obsidian Vault"
-  inbox_file: daily
-
 pomodoro:
-  work_minutes: 25
-  short_break_minutes: 5
   long_break_minutes: 15
   sessions_before_long_break: 4
-
+  short_break_minutes: 5
+  work_minutes: 25
 rss:
-  feeds: []
+  feeds:
+  - name: Reddit Experienced Devs
+    url: https://www.reddit.com/r/ExperiencedDevs/top/.rss?t=month
+  - name: Ars Technica
+    url: https://feeds.arstechnica.com/arstechnica/technology-lab
   refresh_interval_minutes: 5
+tasks:
+  inbox_file: daily
+  vault_path: /Users/najeeb.khan/Documents/Obsidian Vault

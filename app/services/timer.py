@@ -1,4 +1,8 @@
+import logging
+import sqlite3
 from enum import Enum
+
+logger = logging.getLogger(__name__)
 
 
 class Phase(str, Enum):
@@ -17,16 +21,44 @@ class PomodoroTimer:
         self.remaining_seconds = work_minutes * 60
         self.running = False
         self.sessions_completed = 0
+        self._load_state()
+
+    def _load_state(self) -> None:
+        try:
+            from app.db import get_db
+            with get_db() as conn:
+                row = conn.execute("SELECT phase, remaining_seconds, sessions_completed FROM pomodoro_state WHERE id = 1").fetchone()
+                if row:
+                    self.phase = Phase(row["phase"])
+                    self.remaining_seconds = row["remaining_seconds"]
+                    self.sessions_completed = row["sessions_completed"]
+        except sqlite3.Error as e:
+            logger.warning("Failed to load pomodoro state: %s", e)
+
+    def _save_state(self) -> None:
+        try:
+            from app.db import get_db
+            with get_db() as conn:
+                conn.execute(
+                    "UPDATE pomodoro_state SET phase = ?, remaining_seconds = ?, sessions_completed = ?, running = ? WHERE id = 1",
+                    (self.phase.value, self.remaining_seconds, self.sessions_completed, int(self.running)),
+                )
+                conn.commit()
+        except sqlite3.Error as e:
+            logger.warning("Failed to save pomodoro state: %s", e)
 
     def start(self) -> None:
         self.running = True
+        self._save_state()
 
     def pause(self) -> None:
         self.running = False
+        self._save_state()
 
     def reset(self) -> None:
         self.running = False
         self.remaining_seconds = self._duration_for_phase(self.phase)
+        self._save_state()
 
     def skip(self) -> None:
         if self.phase == Phase.WORK:
@@ -39,6 +71,7 @@ class PomodoroTimer:
             self.phase = Phase.WORK
         self.remaining_seconds = self._duration_for_phase(self.phase)
         self.running = False
+        self._save_state()
 
     def get_state(self) -> dict:
         return {
