@@ -7,10 +7,15 @@
     <div class="phase-label">
         {% if state.phase == "work" %}Focus{% elif state.phase == "short_break" %}Short Break{% else %}Long Break{% endif %}
     </div>
-    <div class="timer-countdown" id="countdown">
+    <div class="timer-countdown {% if state.running %}timer-active{% endif %}" id="countdown">
         {{ "%02d"|format(state.remaining_seconds // 60) }}:{{ "%02d"|format(state.remaining_seconds % 60) }}
     </div>
-    <div class="session-count">Sessions: {{ state.sessions_completed }}</div>
+    <div class="session-count">
+        {% for i in range(4) %}
+        <span class="session-dot {% if i < state.sessions_completed % 4 %}filled{% endif %}"></span>
+        {% endfor %}
+        <span class="session-label">{{ state.sessions_completed }} sessions</span>
+    </div>
 </div>
 
 <div class="timer-controls">
