@@ -20,8 +20,6 @@ def tmp_vault(tmp_path):
 def sample_config(tmp_path):
     config_file = tmp_path / "config.yaml"
     config_file.write_text("""
-slack:
-  channels: [general]
 tasks:
   vault_path: ""
   inbox_file: daily
