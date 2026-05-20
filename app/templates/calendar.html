@@ -1,0 +1,32 @@
+<h2>Calendar</h2>
+
+{% if error %}
+<p class="error-state">{{ error }}</p>
+{% elif events %}
+{% set ns = namespace(current_day="") %}
+<ul class="cal-list">
+    {% for event in events %}
+    {% if event.day_label != ns.current_day %}
+    {% set ns.current_day = event.day_label %}
+    <li class="cal-day-header">{{ event.day_label }}</li>
+    {% endif %}
+    <li class="cal-event {% if event.is_now %}cal-event-now{% endif %}">
+        <div class="cal-time-block">
+            {% if event.is_now %}
+            <span class="cal-badge-now">LIVE</span>
+            {% elif event.day_label == "Today" and event.minutes_until <= 15 %}
+            <span class="cal-badge-soon">{{ event.minutes_until }}m</span>
+            {% else %}
+            <span class="cal-time">{{ event.start.strftime("%H:%M") }}</span>
+            {% endif %}
+        </div>
+        <div class="cal-details">
+            <span class="cal-title">{{ event.title }}</span>
+            <span class="cal-duration">{{ event.start.strftime("%H:%M") }}–{{ event.end.strftime("%H:%M") }}{% if event.location %} · {{ event.location }}{% endif %}</span>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No meetings today or tomorrow.</p>
+{% endif %}
