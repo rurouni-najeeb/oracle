@@ -12,3 +12,9 @@ wheels/
 # Tool directories
 .superpowers/
 .claude/
+
+# Personal config (copy config.yaml.example to config.yaml)
+config.yaml
+
+# macOS app bundle (generated per-machine)
+Oracle.app/

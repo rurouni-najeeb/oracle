@@ -1,4 +1,3 @@
-import pytest
 from pathlib import Path
 from app.config import load_config, AppConfig
 

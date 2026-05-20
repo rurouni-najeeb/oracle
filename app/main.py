@@ -1,7 +1,7 @@
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from app.config import load_config, AppConfig
+from app.config import load_config
 from app.db import init_db
 from app.routers import dashboard, tasks, pomodoro, rss, github, calendar, scratchpad
 from app.services.feeds import FeedService

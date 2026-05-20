@@ -52,21 +52,25 @@ class FeedService:
         parsed = feedparser.parse(url)
         items = []
         for entry in parsed.entries:
-            item_id = hashlib.md5((entry.get("link", "") + entry.get("title", "")).encode()).hexdigest()
+            item_id = hashlib.md5(
+                (entry.get("link", "") + entry.get("title", "")).encode()
+            ).hexdigest()
             summary = _strip_html(entry.get("summary", ""))
             if len(summary) > 150:
                 summary = summary[:150] + "..."
             pub = ""
             if hasattr(entry, "published_parsed") and entry.published_parsed:
                 pub = time.strftime("%Y-%m-%d %H:%M", entry.published_parsed)
-            items.append(FeedItem(
-                title=entry.get("title", "Untitled"),
-                link=_safe_link(entry.get("link", "")),
-                summary=summary,
-                source=name,
-                published=pub,
-                item_id=item_id,
-            ))
+            items.append(
+                FeedItem(
+                    title=entry.get("title", "Untitled"),
+                    link=_safe_link(entry.get("link", "")),
+                    summary=summary,
+                    source=name,
+                    published=pub,
+                    item_id=item_id,
+                )
+            )
         self._cache[url] = (now, items)
         return items
 
@@ -77,19 +81,28 @@ class FeedService:
                 items = self.fetch_feed(feed["url"], feed["name"])
                 all_items.extend(items)
             except (OSError, KeyError, ValueError) as e:
-                logger.warning("Failed to fetch feed %s: %s", feed.get("name", "unknown"), e)
+                logger.warning(
+                    "Failed to fetch feed %s: %s", feed.get("name", "unknown"), e
+                )
                 continue
         all_items.sort(key=lambda x: x.published, reverse=True)
         return all_items
 
     def mark_read(self, item_id: str) -> None:
         from app.db import get_db
+
         with get_db() as conn:
-            conn.execute("INSERT OR IGNORE INTO read_items (item_id, read_at) VALUES (?, ?)", (item_id, time.time()))
+            conn.execute(
+                "INSERT OR IGNORE INTO read_items (item_id, read_at) VALUES (?, ?)",
+                (item_id, time.time()),
+            )
             conn.commit()
 
     def is_read(self, item_id: str) -> bool:
         from app.db import get_db
+
         with get_db() as conn:
-            row = conn.execute("SELECT 1 FROM read_items WHERE item_id = ?", (item_id,)).fetchone()
+            row = conn.execute(
+                "SELECT 1 FROM read_items WHERE item_id = ?", (item_id,)
+            ).fetchone()
             return row is not None

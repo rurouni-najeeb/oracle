@@ -33,6 +33,10 @@ cd oracle
 
 # Install dependencies
 uv sync
+
+# Create your config
+cp config.yaml.example config.yaml
+# Edit config.yaml with your vault path, GitHub orgs, and feeds
 ```
 
 ## Running
@@ -65,7 +69,11 @@ task check    # Lint + tests
 
 ## Configuration
 
-Edit `config.yaml` in the project root:
+Copy the example config and edit it:
+
+```bash
+cp config.yaml.example config.yaml
+```
 
 ```yaml
 tasks:
@@ -85,6 +93,11 @@ rss:
     - name: Hacker News
       url: https://hnrss.org/frontpage
   refresh_interval_minutes: 5
+
+github:
+  orgs:
+    - my-github-org
+    - another-org
 ```
 
 RSS feeds can also be added and removed directly from the panel UI.
@@ -164,6 +177,17 @@ uv run pytest -v
 
 Tests are isolated from the production database using temporary SQLite instances.
 
+## Installing as a macOS App
+
+To make Oracle launchable from Spotlight:
+
+```bash
+# Create the app bundle (one-time setup)
+ln -sf "$(pwd)/Oracle.app" /Applications/Oracle.app
+```
+
+The app bundle uses relative paths, so it works from wherever the repo is cloned.
+
 ## License
 
-Private / internal use.
+MIT

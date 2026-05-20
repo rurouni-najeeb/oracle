@@ -1,6 +1,5 @@
-import pytest
 from unittest.mock import patch, MagicMock
-from app.services.feeds import FeedService, FeedItem
+from app.services.feeds import FeedService
 
 
 def _mock_feed_response():
@@ -11,7 +10,11 @@ def _mock_feed_response():
             title="Test Article",
             link="https://example.com/article",
             published_parsed=(2026, 5, 19, 10, 0, 0, 0, 139, 0),
-            get=lambda k, d=None: {"summary": "This is a test article summary that is long enough.", "title": "Test Article", "link": "https://example.com/article"}.get(k, d),
+            get=lambda k, d=None: {
+                "summary": "This is a test article summary that is long enough.",
+                "title": "Test Article",
+                "link": "https://example.com/article",
+            }.get(k, d),
         ),
     ]
     mock_feed.feed = MagicMock(title="Test Blog")
@@ -20,7 +23,9 @@ def _mock_feed_response():
 
 def test_fetch_feeds_returns_items():
     service = FeedService()
-    with patch("app.services.feeds.feedparser.parse", return_value=_mock_feed_response()):
+    with patch(
+        "app.services.feeds.feedparser.parse", return_value=_mock_feed_response()
+    ):
         items = service.fetch_feed("https://example.com/feed.xml", "Test Blog")
     assert len(items) == 1
     assert items[0].title == "Test Article"
@@ -31,7 +36,9 @@ def test_fetch_feeds_returns_items():
 def test_fetch_feeds_caches_results():
     service = FeedService()
     mock_resp = _mock_feed_response()
-    with patch("app.services.feeds.feedparser.parse", return_value=mock_resp) as mock_parse:
+    with patch(
+        "app.services.feeds.feedparser.parse", return_value=mock_resp
+    ) as mock_parse:
         service.fetch_feed("https://example.com/feed.xml", "Test Blog")
         service.fetch_feed("https://example.com/feed.xml", "Test Blog")
     assert mock_parse.call_count == 1
@@ -40,7 +47,9 @@ def test_fetch_feeds_caches_results():
 def test_fetch_feeds_respects_ttl():
     service = FeedService(cache_ttl_seconds=0)
     mock_resp = _mock_feed_response()
-    with patch("app.services.feeds.feedparser.parse", return_value=mock_resp) as mock_parse:
+    with patch(
+        "app.services.feeds.feedparser.parse", return_value=mock_resp
+    ) as mock_parse:
         service.fetch_feed("https://example.com/feed.xml", "Test Blog")
         service.fetch_feed("https://example.com/feed.xml", "Test Blog")
     assert mock_parse.call_count == 2

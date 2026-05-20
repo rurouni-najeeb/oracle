@@ -26,7 +26,9 @@ def _get_timer(request: Request) -> PomodoroTimer:
 @router.get("/panel")
 async def panel(request: Request):
     timer = _get_timer(request)
-    return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
+    return templates.TemplateResponse(
+        request, "pomodoro.html", {"state": timer.get_state()}
+    )
 
 
 @router.get("/state")
@@ -41,7 +43,9 @@ async def start(request: Request, remaining: Optional[str] = Form(None)):
     if remaining is not None:
         timer.remaining_seconds = int(remaining)
     timer.start()
-    return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
+    return templates.TemplateResponse(
+        request, "pomodoro.html", {"state": timer.get_state()}
+    )
 
 
 @router.post("/pause")
@@ -50,18 +54,24 @@ async def pause(request: Request, remaining: Optional[str] = Form(None)):
     if remaining is not None:
         timer.remaining_seconds = int(remaining)
     timer.pause()
-    return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
+    return templates.TemplateResponse(
+        request, "pomodoro.html", {"state": timer.get_state()}
+    )
 
 
 @router.post("/reset")
 async def reset(request: Request):
     timer = _get_timer(request)
     timer.reset()
-    return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
+    return templates.TemplateResponse(
+        request, "pomodoro.html", {"state": timer.get_state()}
+    )
 
 
 @router.post("/skip")
 async def skip(request: Request):
     timer = _get_timer(request)
     timer.skip()
-    return templates.TemplateResponse(request, "pomodoro.html", {"state": timer.get_state()})
+    return templates.TemplateResponse(
+        request, "pomodoro.html", {"state": timer.get_state()}
+    )

@@ -3,7 +3,7 @@ import json
 import logging
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,9 @@ async def fetch_calendar_events() -> list[CalendarEvent]:
 
     try:
         proc = await asyncio.create_subprocess_exec(
-            "swift", "-e", CALENDAR_SWIFT,
+            "swift",
+            "-e",
+            CALENDAR_SWIFT,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
@@ -97,15 +99,17 @@ async def fetch_calendar_events() -> list[CalendarEvent]:
         is_now = start <= now <= end
         day_label = "Today" if start.date() == today else "Tomorrow"
 
-        events.append(CalendarEvent(
-            title=item["title"],
-            start=start,
-            end=end,
-            location=item.get("location", ""),
-            minutes_until=minutes_until,
-            is_now=is_now,
-            day_label=day_label,
-        ))
+        events.append(
+            CalendarEvent(
+                title=item["title"],
+                start=start,
+                end=end,
+                location=item.get("location", ""),
+                minutes_until=minutes_until,
+                is_now=is_now,
+                day_label=day_label,
+            )
+        )
 
     events = [e for e in events if e.end > now]
     seen: set[tuple[str, str]] = set()

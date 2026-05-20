@@ -30,10 +30,16 @@ class RSSConfig:
 
 
 @dataclass
+class GitHubConfig:
+    orgs: list[str] = field(default_factory=list)
+
+
+@dataclass
 class AppConfig:
     tasks: TasksConfig = field(default_factory=TasksConfig)
     pomodoro: PomodoroConfig = field(default_factory=PomodoroConfig)
     rss: RSSConfig = field(default_factory=RSSConfig)
+    github: GitHubConfig = field(default_factory=GitHubConfig)
 
 
 def load_config(path: Path) -> AppConfig:
@@ -55,10 +61,19 @@ def load_config(path: Path) -> AppConfig:
     )
 
     rss_data = data.get("rss", {})
-    feeds = [FeedEntry(url=f.get("url", ""), name=f.get("name", "")) for f in rss_data.get("feeds", [])]
-    rss = RSSConfig(feeds=feeds, refresh_interval_minutes=rss_data.get("refresh_interval_minutes", 5))
+    feeds = [
+        FeedEntry(url=f.get("url", ""), name=f.get("name", ""))
+        for f in rss_data.get("feeds", [])
+    ]
+    rss = RSSConfig(
+        feeds=feeds,
+        refresh_interval_minutes=rss_data.get("refresh_interval_minutes", 5),
+    )
 
-    return AppConfig(tasks=tasks, pomodoro=pomodoro, rss=rss)
+    github_data = data.get("github", {})
+    github = GitHubConfig(orgs=github_data.get("orgs", []))
+
+    return AppConfig(tasks=tasks, pomodoro=pomodoro, rss=rss, github=github)
 
 
 def save_config(config: AppConfig, path: Path) -> None:
@@ -76,6 +91,9 @@ def save_config(config: AppConfig, path: Path) -> None:
         "rss": {
             "feeds": [{"url": f.url, "name": f.name} for f in config.rss.feeds],
             "refresh_interval_minutes": config.rss.refresh_interval_minutes,
+        },
+        "github": {
+            "orgs": config.github.orgs,
         },
     }
     with open(path, "w") as f:

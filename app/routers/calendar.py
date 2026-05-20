@@ -14,12 +14,20 @@ async def calendar_panel(request: Request):
         events = await fetch_calendar_events()
     except (OSError, ValueError) as e:
         logger.error("Calendar panel fetch failed: %s", e)
-        return templates.TemplateResponse(request, "calendar.html", {
-            "events": [],
-            "error": str(e),
-        })
+        return templates.TemplateResponse(
+            request,
+            "calendar.html",
+            {
+                "events": [],
+                "error": str(e),
+            },
+        )
 
-    return templates.TemplateResponse(request, "calendar.html", {
-        "events": events,
-        "error": None,
-    })
+    return templates.TemplateResponse(
+        request,
+        "calendar.html",
+        {
+            "events": events,
+            "error": None,
+        },
+    )

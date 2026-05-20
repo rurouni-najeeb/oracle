@@ -1,11 +1,11 @@
-import pytest
-from pathlib import Path
-from app.services.vault import scan_tasks, toggle_task, add_task, Task
+from app.services.vault import scan_tasks, toggle_task, add_task
 
 
 def test_scan_finds_incomplete_tasks(tmp_path):
     note = tmp_path / "2026-05-19.md"
-    note.write_text("# Today\n- [ ] Buy groceries #task\n- [x] Call dentist #task\n- Regular note\n")
+    note.write_text(
+        "# Today\n- [ ] Buy groceries #task\n- [x] Call dentist #task\n- Regular note\n"
+    )
     tasks = scan_tasks(tmp_path)
     incomplete = [t for t in tasks if not t.completed]
     assert len(incomplete) == 1
