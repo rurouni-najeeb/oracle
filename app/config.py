@@ -1,12 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 import yaml
-
-
-@dataclass
-class SlackConfig:
-    channels: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -37,7 +31,6 @@ class RSSConfig:
 
 @dataclass
 class AppConfig:
-    slack: SlackConfig = field(default_factory=SlackConfig)
     tasks: TasksConfig = field(default_factory=TasksConfig)
     pomodoro: PomodoroConfig = field(default_factory=PomodoroConfig)
     rss: RSSConfig = field(default_factory=RSSConfig)
@@ -46,8 +39,6 @@ class AppConfig:
 def load_config(path: Path) -> AppConfig:
     with open(path) as f:
         data = yaml.safe_load(f) or {}
-
-    slack = SlackConfig(channels=data.get("slack", {}).get("channels", []))
 
     tasks_data = data.get("tasks", {})
     tasks = TasksConfig(
@@ -67,12 +58,11 @@ def load_config(path: Path) -> AppConfig:
     feeds = [FeedEntry(url=f.get("url", ""), name=f.get("name", "")) for f in rss_data.get("feeds", [])]
     rss = RSSConfig(feeds=feeds, refresh_interval_minutes=rss_data.get("refresh_interval_minutes", 5))
 
-    return AppConfig(slack=slack, tasks=tasks, pomodoro=pomodoro, rss=rss)
+    return AppConfig(tasks=tasks, pomodoro=pomodoro, rss=rss)
 
 
 def save_config(config: AppConfig, path: Path) -> None:
     data = {
-        "slack": {"channels": config.slack.channels},
         "tasks": {
             "vault_path": str(config.tasks.vault_path),
             "inbox_file": config.tasks.inbox_file,
