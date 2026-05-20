@@ -21,7 +21,7 @@ async def github_panel(request: Request):
             {
                 "review_requests": [],
                 "my_prs": [],
-                "commented": [],
+                "involved": [],
                 "error": str(e),
             },
         )
@@ -32,7 +32,7 @@ async def github_panel(request: Request):
         {
             "review_requests": data.review_requests,
             "my_prs": data.my_prs,
-            "commented": data.commented,
+            "involved": data.involved,
             "error": None,
         },
     )
