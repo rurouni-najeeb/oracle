@@ -1,12 +1,22 @@
+import os
+import sys
 import threading
 import uvicorn
 import webview
-from app.main import app
 
 PORT = 8787
 
 
+def _get_bundle_dir() -> str:
+    if getattr(sys, "_MEIPASS", None):
+        return sys._MEIPASS
+    return os.path.dirname(os.path.abspath(__file__))
+
+
 def start_server():
+    os.chdir(_get_bundle_dir())
+    from app.main import app
+
     uvicorn.run(app, host="127.0.0.1", port=PORT, log_level="warning")
 
 

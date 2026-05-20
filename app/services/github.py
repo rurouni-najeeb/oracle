@@ -23,7 +23,7 @@ class PullRequest:
 class GitHubData:
     review_requests: list[PullRequest]
     my_prs: list[PullRequest]
-    commented: list[PullRequest]
+    involved: list[PullRequest]
 
 
 @dataclass
@@ -58,12 +58,14 @@ async def fetch_github_data(orgs: list[str]) -> GitHubData:
     if _cache and (time.time() - _cache.ts) < _cache_ttl:
         return _cache.result
 
-    review_requests = await _fetch_review_requests(orgs)
-    my_prs = await _fetch_my_prs(orgs)
-    commented = await _fetch_commented_prs(orgs)
+    review_requests, my_prs, involved = await asyncio.gather(
+        _fetch_review_requests(orgs),
+        _fetch_my_prs(orgs),
+        _fetch_involved_prs(orgs),
+    )
 
     result = GitHubData(
-        review_requests=review_requests, my_prs=my_prs, commented=commented
+        review_requests=review_requests, my_prs=my_prs, involved=involved
     )
     _cache = _CacheEntry(result=result, ts=time.time())
     return result
@@ -137,9 +139,9 @@ async def _fetch_my_prs(orgs: list[str]) -> list[PullRequest]:
     ]
 
 
-async def _fetch_commented_prs(orgs: list[str]) -> list[PullRequest]:
+async def _fetch_involved_prs(orgs: list[str]) -> list[PullRequest]:
     org_query = "+".join(f"org:{org}" for org in orgs)
-    query = f"is:open+is:pr+commenter:@me+-author:@me+{org_query}"
+    query = f"is:open+is:pr+involves:@me+-author:@me+-review-requested:@me+{org_query}"
 
     output = await _run_gh(
         [
@@ -161,7 +163,7 @@ async def _fetch_commented_prs(orgs: list[str]) -> list[PullRequest]:
                 title=item["title"],
                 number=item["number"],
                 url=item["url"],
-                status="commented",
+                status="involved",
                 updated=item["updated"][:10],
                 is_review_requested=False,
             )

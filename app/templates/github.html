@@ -40,11 +40,11 @@
 </div>
 {% endif %}
 
-{% if commented %}
+{% if involved %}
 <div class="gh-section">
-    <h3 class="gh-section-title">Commented</h3>
+    <h3 class="gh-section-title">Involved</h3>
     <ul class="gh-list">
-        {% for pr in commented %}
+        {% for pr in involved %}
         <li class="gh-item">
             <a href="{{ pr.url }}" target="_blank" class="gh-pr-link">{{ pr.title }}</a>
             <div class="gh-pr-meta">
@@ -58,7 +58,7 @@
 </div>
 {% endif %}
 
-{% if not review_requests and not my_prs and not commented %}
+{% if not review_requests and not my_prs and not involved %}
 <p class="empty-state">No open PRs or pending reviews.</p>
 {% endif %}
 
