@@ -1,26 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="panel" id="slack-panel">
-    <div hx-get="/slack/panel" hx-trigger="load, every 30s" hx-swap="innerHTML">
-        <p>Loading Slack messages...</p>
+<section class="panel" id="tasks-panel">
+    <div hx-get="/tasks/panel" hx-trigger="load" hx-swap="innerHTML">
+        <p class="empty-state">Loading tasks...</p>
     </div>
 </section>
 
-<section class="panel" id="tasks-panel">
-    <div hx-get="/tasks/panel" hx-trigger="load" hx-swap="innerHTML">
-        <p>Loading tasks...</p>
+<section class="panel" id="calendar-panel">
+    <div hx-get="/calendar/panel" hx-trigger="load, every 60s" hx-swap="innerHTML">
+        <p class="empty-state">Loading calendar...</p>
     </div>
 </section>
 
 <section class="panel" id="pomodoro-panel">
     <div hx-get="/pomodoro/panel" hx-trigger="load" hx-swap="innerHTML">
-        <p>Loading timer...</p>
+        <p class="empty-state">Loading timer...</p>
+    </div>
+</section>
+
+<section class="panel" id="github-panel">
+    <div hx-get="/github/panel" hx-trigger="load, every 120s" hx-swap="innerHTML">
+        <p class="empty-state">Loading GitHub...</p>
+    </div>
+</section>
+
+<section class="panel" id="scratchpad-panel">
+    <div hx-get="/scratchpad/panel" hx-trigger="load" hx-swap="innerHTML">
+        <p class="empty-state">Loading scratchpad...</p>
     </div>
 </section>
 
 <section class="panel" id="rss-panel">
     <div hx-get="/rss/panel" hx-trigger="load, every 300s" hx-swap="innerHTML">
-        <p>Loading feeds...</p>
+        <p class="empty-state">Loading feeds...</p>
     </div>
 </section>
 {% endblock %}
