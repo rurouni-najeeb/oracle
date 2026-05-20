@@ -1,0 +1,4 @@
+#!/bin/bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+cd /Users/najeeb.khan/oracle
+/opt/homebrew/bin/uv run python desktop.py
