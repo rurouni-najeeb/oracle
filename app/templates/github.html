@@ -1,0 +1,65 @@
+<h2>GitHub</h2>
+
+{% if error %}
+<p class="error-state">{{ error }}</p>
+{% else %}
+
+{% if review_requests %}
+<div class="gh-section">
+    <h3 class="gh-section-title">Reviews requested</h3>
+    <ul class="gh-list">
+        {% for pr in review_requests %}
+        <li class="gh-item">
+            <a href="{{ pr.url }}" target="_blank" class="gh-pr-link">{{ pr.title }}</a>
+            <div class="gh-pr-meta">
+                <span class="gh-repo">{{ pr.repo }}</span>
+                <span class="gh-pr-number">#{{ pr.number }}</span>
+                <span class="gh-date">{{ pr.updated }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if my_prs %}
+<div class="gh-section">
+    <h3 class="gh-section-title">My open PRs</h3>
+    <ul class="gh-list">
+        {% for pr in my_prs %}
+        <li class="gh-item">
+            <a href="{{ pr.url }}" target="_blank" class="gh-pr-link">{{ pr.title }}</a>
+            <div class="gh-pr-meta">
+                <span class="gh-repo">{{ pr.repo }}</span>
+                <span class="gh-pr-number">#{{ pr.number }}</span>
+                <span class="gh-status gh-status-{{ pr.status | lower }}">{{ pr.status }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if commented %}
+<div class="gh-section">
+    <h3 class="gh-section-title">Commented</h3>
+    <ul class="gh-list">
+        {% for pr in commented %}
+        <li class="gh-item">
+            <a href="{{ pr.url }}" target="_blank" class="gh-pr-link">{{ pr.title }}</a>
+            <div class="gh-pr-meta">
+                <span class="gh-repo">{{ pr.repo }}</span>
+                <span class="gh-pr-number">#{{ pr.number }}</span>
+                <span class="gh-date">{{ pr.updated }}</span>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if not review_requests and not my_prs and not commented %}
+<p class="empty-state">No open PRs or pending reviews.</p>
+{% endif %}
+
+{% endif %}
