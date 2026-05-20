@@ -43,6 +43,8 @@ class AppConfig:
 
 
 def load_config(path: Path) -> AppConfig:
+    if not path.exists():
+        return AppConfig()
     with open(path) as f:
         data = yaml.safe_load(f) or {}
 
