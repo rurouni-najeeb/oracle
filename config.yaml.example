@@ -17,3 +17,8 @@ rss:
 github:
   orgs:
     - my-org
+  repositories:
+    - owner: my-org
+      repo: oracle
+      display_name: Oracle
+      url: https://github.com/my-org/oracle

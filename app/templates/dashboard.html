@@ -24,6 +24,12 @@
     </div>
 </section>
 
+<section class="panel" id="repositories-panel">
+    <div hx-get="/github/repositories/panel" hx-trigger="load" hx-swap="innerHTML">
+        <p class="empty-state">Loading repositories...</p>
+    </div>
+</section>
+
 <section class="panel" id="scratchpad-panel">
     <div hx-get="/scratchpad/panel" hx-trigger="load" hx-swap="innerHTML">
         <p class="empty-state">Loading scratchpad...</p>

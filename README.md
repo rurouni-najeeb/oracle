@@ -8,7 +8,7 @@ A personal dashboard for macOS that surfaces your calendar, GitHub PRs, tasks, R
 ## Features
 
 - **Calendar** — Shows today's and tomorrow's events from macOS Calendar.app
-- **GitHub** — Open PRs, review requests, and PRs you've commented on (across configured orgs)
+- **GitHub** — Open PRs, review requests, PRs you've commented on, and pinned repository shortcuts
 - **Tasks** — Obsidian vault task integration (read/toggle/add tasks from markdown files)
 - **RSS** — Feed reader with add/remove management and read/unread tracking
 - **Scratchpad** — Quick notes with create, edit, and delete
@@ -98,6 +98,11 @@ github:
   orgs:
     - my-github-org
     - another-org
+  repositories:
+    - owner: my-github-org
+      repo: oracle
+      display_name: Oracle
+      url: https://github.com/my-github-org/oracle
 ```
 
 RSS feeds can also be added and removed directly from the panel UI.
@@ -156,6 +161,7 @@ Each panel polls independently via HTMX:
 |-------|----------|--------|
 | Calendar | 60s | macOS Calendar.app |
 | GitHub | 120s | GitHub API via `gh` |
+| Repositories | on interaction | Local config |
 | RSS | 300s | feedparser |
 | Pomodoro | client-side | JS timer + server sync |
 | Tasks | on interaction | Obsidian vault files |
