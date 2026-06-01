@@ -12,12 +12,9 @@
 {% if notes %}
 <ul class="note-list">
     {% for note in notes %}
-    <li class="note-item" id="note-{{ note.id }}">
-        <form hx-post="/scratchpad/update" hx-target="#scratchpad-panel > div" hx-swap="innerHTML" class="note-edit-form">
-            <input type="hidden" name="note_id" value="{{ note.id }}">
-            <input type="text" name="content" value="{{ note.content }}" class="note-edit-input">
-        </form>
-        <form hx-post="/scratchpad/delete" hx-target="#scratchpad-panel > div" hx-swap="innerHTML" class="note-delete-form">
+    <li class="note-item" id="note-{{ note.id }}" onclick="openNotePopup('{{ note.id }}', this.querySelector('.note-edit-input').value)">
+        <span class="note-content-display">{{ note.content }}</span>
+        <form hx-post="/scratchpad/delete" hx-target="#scratchpad-panel > div" hx-swap="innerHTML" class="note-delete-form" onclick="event.stopPropagation()">
             <input type="hidden" name="note_id" value="{{ note.id }}">
             <button type="submit" class="note-delete-btn" aria-label="Delete note">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -25,9 +22,46 @@
                 </svg>
             </button>
         </form>
+        <input type="hidden" class="note-edit-input" value="{{ note.content }}">
     </li>
     {% endfor %}
 </ul>
 {% else %}
 <p class="empty-state">No notes yet.</p>
 {% endif %}
+
+<div class="note-popup-overlay" id="note-popup-overlay" onclick="closeNotePopup()">
+    <div class="note-popup" onclick="event.stopPropagation()">
+        <div class="note-popup-header">
+            <h3>Edit Note</h3>
+            <button class="note-popup-close" onclick="closeNotePopup()" aria-label="Close">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 2l10 10M12 2l-10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <form hx-post="/scratchpad/update" hx-target="#scratchpad-panel > div" hx-swap="innerHTML" class="note-popup-form">
+            <input type="hidden" name="note_id" id="note-popup-id">
+            <textarea name="content" id="note-popup-content" class="note-popup-textarea" rows="6" placeholder="Write your note..."></textarea>
+            <div class="note-popup-actions">
+                <button type="button" class="note-popup-cancel" onclick="closeNotePopup()">Cancel</button>
+                <button type="submit" class="note-popup-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function openNotePopup(noteId, content) {
+    document.getElementById('note-popup-id').value = noteId;
+    document.getElementById('note-popup-content').value = content;
+    document.getElementById('note-popup-overlay').classList.add('active');
+    document.getElementById('note-popup-content').focus();
+}
+function closeNotePopup() {
+    document.getElementById('note-popup-overlay').classList.remove('active');
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeNotePopup();
+});
+</script>

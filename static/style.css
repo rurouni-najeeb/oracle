@@ -774,6 +774,131 @@ header h1 {
 .note-item:hover .note-delete-btn { opacity: 1; }
 .note-delete-btn:hover { color: var(--accent); }
 
+.note-content-display {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    padding: 0.3rem 0.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.note-item { cursor: pointer; }
+
+/* Note Popup */
+.note-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.note-popup-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.note-popup {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 480px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transform: translateY(10px);
+    transition: transform 0.2s ease;
+}
+.note-popup-overlay.active .note-popup {
+    transform: translateY(0);
+}
+.note-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.note-popup-header h3 {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.note-popup-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease;
+}
+.note-popup-close:hover { color: var(--text-primary); }
+.note-popup-textarea {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 300;
+    padding: 0.8rem;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.note-popup-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.note-popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+.note-popup-cancel {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+.note-popup-cancel:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+}
+.note-popup-save {
+    padding: 0.5rem 1rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+}
+.note-popup-save:hover { opacity: 0.85; }
+.note-popup-save:active { transform: scale(0.97); }
+
 /* RSS */
 .rss-manage {
     margin-bottom: 0.75rem;
