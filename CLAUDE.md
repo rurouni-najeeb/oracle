@@ -32,7 +32,12 @@ task check  # lint + tests
 ## Workflow
 
 - Every change should result in a PR to `main`.
-- When enough features have accumulated, create a GitHub release.
+- When enough features have accumulated, create a release by pushing a version tag:
+  ```bash
+  git tag v1.X.0
+  git push origin v1.X.0
+  ```
+  The `.github/workflows/release.yml` workflow runs tests and creates a GitHub release with auto-generated notes from merged PRs.
 
 ## Architecture
 
