@@ -4,17 +4,17 @@ version = "0.1.0"
 description = "Personal dashboard"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi>=0.138.0",
-    "uvicorn[standard]>=0.49.0",
+    "fastapi>=0.141.1",
+    "uvicorn[standard]>=0.52.4",
     "jinja2>=3.1.6",
     "pyyaml>=6.0.3",
     "httpx>=0.28.1",
-    "feedparser>=6.0.12",
+    "feedparser>=6.0.14",
     "python-multipart>=0.0.32",
     "markdown-it-py>=4.2.0",
     "markupsafe>=3.0.3",
     "pywebview>=6.2.1",
-    "nh3>=0.3.6",
+    "nh3>=0.3.7",
 ]
 
 [dependency-groups]
@@ -22,6 +22,6 @@ dev = [
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "httpx>=0.28.1",
-    "ruff>=0.15.19",
-    "pyinstaller>=6.21.0",
+    "ruff>=0.16.5",
+    "pyinstaller>=6.22.2",
 ]
